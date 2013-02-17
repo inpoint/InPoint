@@ -59,8 +59,8 @@ public class InPoint extends Activity implements OnClickListener {
 
 		// Setup WiFi
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-
-		textStatus.append("Start scanning and logging..\n");
+		textStatus.setText("");
+		textStatus.append("Press Scan to InPoint yourself!\n");
 		Log.d(TAG, "onCreate()");
 	}
 
