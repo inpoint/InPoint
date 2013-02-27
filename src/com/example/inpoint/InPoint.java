@@ -10,9 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -125,15 +123,15 @@ public class InPoint extends Activity implements OnClickListener {
 						bestSignal = result;
 				}
 
-				for (int i = 0; i < results.size(); i++) {
-					String message1 = String
-							.format("AP num: %d\nessid: %s \nMAC: %s\nfrequency: %s\nSig: %d",
-									i + 1, results.get(i).SSID,
-									results.get(i).BSSID,
-									results.get(i).frequency,
-									results.get(i).level);
-					textStatus.append(message1 + '\n');
-				}
+//				for (int i = 0; i < results.size(); i++) {
+//					String message1 = String
+//							.format("AP num: %d\nessid: %s \nMAC: %s\nfrequency: %s\nSig: %d",
+//									i + 1, results.get(i).SSID,
+//									results.get(i).BSSID,
+//									results.get(i).frequency,
+//									results.get(i).level);
+//					textStatus.append(message1 + '\n');
+//				}
 			}
 
 			HashMap<String, Double> map_sig = new HashMap<String, Double>();
@@ -176,7 +174,6 @@ public class InPoint extends Activity implements OnClickListener {
 			String session = "<session>\n <number>" + map_avg.size()
 					+ "</number>\n";
 			String content = " <content>\n";
-			int num = 1;
 			for (String key : map_avg.keySet()) {
 				content += "  <";
 				content += "item";
@@ -190,10 +187,10 @@ public class InPoint extends Activity implements OnClickListener {
 				content += "  </";
 				content += "item";
 				content += ">\n";
-				num++;
 			}
 			content += " </content>\n</session>\n";
 			xml = header + session + content;
+			textStatus.append("The XML below to be sent to server:\n\n");
 			textStatus.append(xml);
 
 			/* get IMEI */
@@ -233,7 +230,7 @@ public class InPoint extends Activity implements OnClickListener {
 							new InputStreamReader(httpResponse.getEntity()
 									.getContent(), "UTF-8"));
 					String json = reader.readLine();
-
+					textStatus.append("\nResponse from server:\n\n");
 					textStatus.append(json);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
