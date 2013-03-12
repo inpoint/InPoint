@@ -99,7 +99,7 @@ public class InPoint extends Activity implements OnClickListener {
 			}
 			wifi.startScan();
 			try {
-				Thread.sleep(700);
+				Thread.sleep(1300);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -109,7 +109,7 @@ public class InPoint extends Activity implements OnClickListener {
 			for (int scancount = 0; scancount < 5; scancount++) {
 				wifi.startScan();
 				try {
-					Thread.sleep(700);
+					Thread.sleep(1300);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -213,7 +213,7 @@ public class InPoint extends Activity implements OnClickListener {
 				try {
 					HttpClient httpclient = new DefaultHttpClient();
 					HttpPost httppost = new HttpPost(
-							"http://inpoint.pdp.fi/wlan/wlan.php");
+							"http://inpoint.pdp.fi/wlan/wlan_relative.php");
 
 					// send xml through http post
 					StringEntity se = new StringEntity(xml, HTTP.UTF_8);
