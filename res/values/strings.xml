@@ -4,5 +4,6 @@
     <string name="Inpoint_notification">Inpoint Project Indoor positioning</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_wifi_scanner">InPoint</string>
+    <string name="desc">image</string>
 
 </resources>

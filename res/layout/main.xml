@@ -6,32 +6,46 @@
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="@string/Inpoint_notification"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-  <Button android:layout_width="wrap_content"
-    android:layout_height="wrap_content" android:id="@+id/buttonScan"
-    android:text="Scan"></Button>
+      
 
-  <ScrollView android:id="@+id/ScrollView01"
-    android:layout_width="wrap_content" android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/textStatus"
+    <Button
+        android:id="@+id/buttonScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="inPoint" />
+        android:text="Scan" />
+    
+    <HorizontalScrollView  
+       		android:id="@+id/HorizontalScrollView1"
+        	android:layout_width="wrap_content"
+       		android:layout_height="320dp" >
+   			<ImageView
+        		android:id="@+id/imageView3"
+        		android:layout_width="wrap_content"
+        		android:layout_height="320dp"
+        		android:background="#FFF"
+        		android:contentDescription="@string/desc"
+				android:scaleType="fitStart"/>
+<!--    		android:padding="10dp"   -->
+        
+<!---    		android:src="@drawable/df_map_test" */  -->    
+    </HorizontalScrollView>
+    
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
-  </ScrollView>
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:text="inPoint" />
+    </ScrollView>
 
-  <ImageView
-      android:id="@+id/imageView2"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="right"
-      android:src="@drawable/ic_launcher" />
 
 </LinearLayout>

@@ -6,16 +6,23 @@ import java.util.List;
 import java.io.*;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -36,7 +43,17 @@ public class InPoint extends Activity implements OnClickListener {
 
 	TextView textStatus;
 	Button buttonScan;
-
+	
+	private Bitmap mapMark;
+	private Bitmap mapCopy;
+	private Bitmap mapTemp;
+	ImageView imageView;
+	
+	public static final float mapActualX_Max = 100;  //represent max coordinate x, length 
+	public static final float mapActualY_Max = 40;  //represent max coordinate y, width
+	private float serverReturn_x = 0;    //server return calculated coordinate x,
+	private float serverReturn_y = 0;    //server return calculated coordinate y,
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +76,12 @@ public class InPoint extends Activity implements OnClickListener {
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 		textStatus.setText("");
 		textStatus.append("Press Scan to InPoint yourself!\n");
+		
+		// Setup imageView
+		
+//		ImageView map = (ImageView)this.findViewById(R.id.imageView3);
+
+
 		Log.d(TAG, "onCreate()");
 	}
 
@@ -99,7 +122,7 @@ public class InPoint extends Activity implements OnClickListener {
 			}
 			wifi.startScan();
 			try {
-				Thread.sleep(1300);
+				Thread.sleep(700);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -109,7 +132,7 @@ public class InPoint extends Activity implements OnClickListener {
 			for (int scancount = 0; scancount < 5; scancount++) {
 				wifi.startScan();
 				try {
-					Thread.sleep(1300);
+					Thread.sleep(700);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -213,7 +236,7 @@ public class InPoint extends Activity implements OnClickListener {
 				try {
 					HttpClient httpclient = new DefaultHttpClient();
 					HttpPost httppost = new HttpPost(
-							"http://inpoint.pdp.fi/wlan/wlan_relative.php");
+							"http://inpoint.pdp.fi/wlan/wlan.php");
 
 					// send xml through http post
 					StringEntity se = new StringEntity(xml, HTTP.UTF_8);
@@ -232,6 +255,16 @@ public class InPoint extends Activity implements OnClickListener {
 					String json = reader.readLine();
 					textStatus.append("\nResponse from server:\n\n");
 					textStatus.append(json);
+					
+					/*read server returned coordinates for Map UI display
+					* Here the String "TestString" is only for function Test, 
+					* In actual use, please replace "TestString" below to "json" 
+					*/
+					String TestString = "35.3,12.2";
+				//	readPositionFromServer(TestString);
+					readPositionFromServer(json);
+
+					
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				} catch (ClientProtocolException e) {
@@ -240,7 +273,77 @@ public class InPoint extends Activity implements OnClickListener {
 					e.printStackTrace();
 				}
 			}
+			
+			//add mark to the map
+			mapMark = BitmapFactory.decodeResource(getResources(), R.drawable.map_mark);
+			mapCopy = BitmapFactory.decodeResource(getResources(), R.drawable.df_map_v2);
+			// add the mark coordinates here, (x,y)
+			mapTemp = addMark(mapCopy, mapMark, serverReturn_x/mapActualX_Max, serverReturn_y/mapActualY_Max);
+			
+			imageView = (ImageView)this.findViewById(R.id.imageView3);
+			imageView.setImageBitmap(mapTemp);
+
 		}
 	}
+	
+	public void readPositionFromServer(String src){
+		String temp[] = src.split(",|\\_|\\ ");
+		textStatus.append("\nRead Result_x: ");
+		textStatus.append(temp[0]);
+		textStatus.append("  _y: ");
+		textStatus.append(temp[1]);
+		
+		try{
+			serverReturn_x = Float.parseFloat(temp[0]);
+		}
+		catch(NumberFormatException e){
+		    e.toString();
+		}
+		try{
+			serverReturn_y = Float.parseFloat(temp[1]);
+		}
+		catch(NumberFormatException e){
+		    e.toString();
+		}
+		textStatus.append("\nTrans Result_x: ");
+		textStatus.append(Float.toString(serverReturn_x));
+		textStatus.append("  _y: ");
+		textStatus.append(Float.toString(serverReturn_y));
+				
+	}
+	
+	
+	public Bitmap addMark(Bitmap src, Bitmap mark, float relativePosX, float relativePosY)  
+    {  
+        // create a new figure, same size as original figure src
+        Bitmap newb = Bitmap.createBitmap(src.getWidth(), src.getHeight(), Config.ARGB_8888);// 
+        textStatus.append("\nmap_Width: ");
+		textStatus.append(Integer.toString(src.getWidth()));
+		textStatus.append("  _Height: ");
+		textStatus.append(Integer.toString(src.getHeight()));
+        
+        Canvas canvas = new Canvas(newb);  
+        canvas.drawBitmap(src, 0, 0, null);// insert original figure at coordinate-(0,0)  
+        
+        //insert mark onto the figure
+//      canvas.drawBitmap(mark, (src.getWidth() - mark.getWidth()) / 2, (src.getHeight() - mark.getHeight()) / 2, null); 
+        
+        int posx = (int)(relativePosX*src.getWidth());
+        int posy = (int)(relativePosY*src.getHeight());
+		textStatus.append("\nmapped_x: ");
+		textStatus.append(Integer.toString(posx));
+		textStatus.append("  _y: ");
+		textStatus.append(Integer.toString(posy));
+        canvas.drawBitmap(mark, posx, posy, null); 
+        canvas.save(Canvas.ALL_SAVE_FLAG);  
+        canvas.restore();  
+          
+        mark.recycle();  
+        mark = null;  
+          
+        return newb;  
+    }  
+	
+	
 
 }
