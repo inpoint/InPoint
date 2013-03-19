@@ -11,30 +11,24 @@
         android:text="@string/Inpoint_notification"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-      
-
-    <Button
-        android:id="@+id/buttonScan"
+    <HorizontalScrollView
+        android:id="@+id/HorizontalScrollView1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan" />
-    
-    <HorizontalScrollView  
-       		android:id="@+id/HorizontalScrollView1"
-        	android:layout_width="wrap_content"
-       		android:layout_height="320dp" >
-   			<ImageView
-        		android:id="@+id/imageView3"
-        		android:layout_width="wrap_content"
-        		android:layout_height="320dp"
-        		android:background="#FFF"
-        		android:contentDescription="@string/desc"
-				android:scaleType="fitStart"/>
-<!--    		android:padding="10dp"   -->
-        
-<!---    		android:src="@drawable/df_map_test" */  -->    
+        android:layout_height="320dp" >
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="320dp"
+            android:background="#FFF"
+            android:contentDescription="@string/desc"
+            android:scaleType="fitStart" />
+        <!-- android:padding="10dp" -->
+
+
+        <!-- -    		android:src="@drawable/df_map_test" */ -->
     </HorizontalScrollView>
-    
+
     <ScrollView
         android:id="@+id/ScrollView01"
         android:layout_width="wrap_content"
@@ -46,6 +40,5 @@
             android:layout_height="wrap_content"
             android:text="inPoint" />
     </ScrollView>
-
 
 </LinearLayout>
