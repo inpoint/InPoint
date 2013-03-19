@@ -6,6 +6,7 @@ import java.util.List;
 import java.io.*;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,8 @@ import android.os.Message;
 import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -41,11 +44,14 @@ public class InPoint extends Activity {
 	// public static final String userID =
 	// android.provider.Settings.Secure.ANDROID_ID;
 	public static WifiManager wifi;
-	// BroadcastReceiver receiver;
+
+	public static final int MENU_EXITAPPLICATION = Menu.FIRST;
 
 	public static Handler mainHandler;
 	public static TextView textStatus;
 	public static ImageView imageView;
+
+	public static boolean should_scan;
 
 	private Bitmap mapMark;
 	private Bitmap mapCopy;
@@ -74,6 +80,7 @@ public class InPoint extends Activity {
 		textStatus.setText("");
 
 		// Setup imageView
+		should_scan = true;
 
 		// ImageView map = (ImageView)this.findViewById(R.id.imageView3);
 
@@ -86,7 +93,7 @@ public class InPoint extends Activity {
 			Thread scan_thread = new Thread() {
 				@Override
 				public void run() {
-					while (true) {
+					while (should_scan) {
 						wifi.startScan();
 						try {
 							Thread.sleep(700);
@@ -271,8 +278,23 @@ public class InPoint extends Activity {
 	}
 
 	@Override
+	public void onResume() {
+		should_scan = true;
+		super.onResume();
+	}
+
+	@Override
+	protected void onStart() {
+		int flag = getIntent().getIntExtra("flag", 0);
+		if (flag == SysUtil.EXIT_APPLICATION) {
+			finish();
+		}
+		super.onResume();
+
+	}
+
+	@Override
 	public void onPause() {
-		// unregisterReceiver(receiver);
 		unregisterForContextMenu(textStatus);
 		unregisterForContextMenu(imageView);
 		super.onPause();
@@ -280,7 +302,6 @@ public class InPoint extends Activity {
 
 	@Override
 	public void onStop() {
-		// unregisterReceiver(receiver);
 		unregisterForContextMenu(textStatus);
 		unregisterForContextMenu(imageView);
 		super.onStop();
@@ -288,13 +309,36 @@ public class InPoint extends Activity {
 
 	@Override
 	public void onDestroy() {
+		should_scan = false;
 		unregisterForContextMenu(textStatus);
 		unregisterForContextMenu(imageView);
 		super.onDestroy();
 	}
 
-	public void onClick(View view) {
+	@Override
+	protected void onNewIntent(Intent intent) {
+		int flag = getIntent().getIntExtra("flag", 0);
+		if (flag == SysUtil.EXIT_APPLICATION) {
+			finish();
+		}
+		super.onNewIntent(intent);
+	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, MENU_EXITAPPLICATION, 0, "Exit InPoint App");
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == MENU_EXITAPPLICATION) {
+			// exit app
+			SysUtil mSysUtil = new SysUtil(InPoint.this);
+			mSysUtil.exit();
+
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void readPositionFromServer(String src) {
@@ -318,13 +362,13 @@ public class InPoint extends Activity {
 		// textStatus.append(Float.toString(serverReturn_x));
 		// textStatus.append("  _y: ");
 		// textStatus.append(Float.toString(serverReturn_y));
-		
-		//for debug
-//		Message msg1 = mainHandler.obtainMessage();
-//		msg1.obj = "Read Result_x: " + temp[0] + "  _y: " + temp[1]
-//				+ "\nTrans Result_x: " + Float.toString(serverReturn_x)
-//				+ "  _y: " + Float.toString(serverReturn_y) + "\n";
-//		mainHandler.sendMessage(msg1);
+
+		// for debug
+		// Message msg1 = mainHandler.obtainMessage();
+		// msg1.obj = "Read Result_x: " + temp[0] + "  _y: " + temp[1]
+		// + "\nTrans Result_x: " + Float.toString(serverReturn_x)
+		// + "  _y: " + Float.toString(serverReturn_y) + "\n";
+		// mainHandler.sendMessage(msg1);
 
 	}
 
