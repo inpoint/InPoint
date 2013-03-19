@@ -61,14 +61,7 @@ public class InPoint extends Activity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// for android version later than 2.3, enable processing httpclient in
-		// main thread
-		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-				.detectDiskReads().detectDiskWrites().detectNetwork()
-				.penaltyLog().build());
-		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-				.detectLeakedSqlLiteObjects().penaltyLog().penaltyDeath()
-				.build());
+
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
@@ -193,7 +186,7 @@ public class InPoint extends Activity {
 							try {
 								HttpClient httpclient = new DefaultHttpClient();
 								HttpPost httppost = new HttpPost(
-										"http://inpoint.pdp.fi/wlan/wlan.php");
+										"http://inpoint.pdp.fi/wlan/wlan_relative.php");
 
 								// send xml through http post
 								StringEntity se = new StringEntity(xml,
@@ -218,7 +211,8 @@ public class InPoint extends Activity {
 
 								// send msg to main thread to update UI
 								Message msg1 = mainHandler.obtainMessage();
-								msg1.obj = "Response from server:  " + json +"\n";
+								msg1.obj = "Response from server:  " + json
+										+ "\n";
 								mainHandler.sendMessage(msg1);
 
 								/*
@@ -324,6 +318,13 @@ public class InPoint extends Activity {
 		// textStatus.append(Float.toString(serverReturn_x));
 		// textStatus.append("  _y: ");
 		// textStatus.append(Float.toString(serverReturn_y));
+		
+		//for debug
+//		Message msg1 = mainHandler.obtainMessage();
+//		msg1.obj = "Read Result_x: " + temp[0] + "  _y: " + temp[1]
+//				+ "\nTrans Result_x: " + Float.toString(serverReturn_x)
+//				+ "  _y: " + Float.toString(serverReturn_y) + "\n";
+//		mainHandler.sendMessage(msg1);
 
 	}
 
