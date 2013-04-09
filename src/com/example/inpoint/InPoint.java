@@ -168,12 +168,18 @@ public class InPoint extends Activity {
 							// " "
 							// + map_num.get(key).doubleValue() + "\n");
 						}
+						
+						//obtain device mac address
+						
+						String address= wifi.getConnectionInfo().getMacAddress();
 
 						// create a xml formatted string
 						String xml;
 						String header = "<?xml version='1.0'?>\n";
 						String session = "<session>\n <number>"
 								+ map_avg.size() + "</number>\n";
+						String deviceMac = " <own_mac>" + address
+								+ "</own_mac>\n"
 						String content = " <content>\n";
 						for (String key : map_avg.keySet()) {
 							content += "  <";
@@ -190,7 +196,7 @@ public class InPoint extends Activity {
 							content += ">\n";
 						}
 						content += " </content>\n</session>\n";
-						xml = header + session + content;
+						xml = header + session + deviceMac + content;
 
 						// send msg to main thread to update UI
 						// Message msg = mainHandler.obtainMessage();
