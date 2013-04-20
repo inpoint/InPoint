@@ -56,12 +56,11 @@ public class InPoint extends Activity {
 	public static Handler mainHandler;
 	public static TextView textStatus;
 	public static ImageView imageView;
-	
+
 	private static ImageButton zoomInButton;
 	private static ImageButton zoomOutButton;
 	private DisplayMetrics dm;
-	
-	
+
 	public static boolean should_scan;
 
 	private Bitmap mapMark;
@@ -87,8 +86,8 @@ public class InPoint extends Activity {
 		// Setup UI
 		textStatus = (TextView) findViewById(R.id.textStatus);
 		imageView = (ImageView) this.findViewById(R.id.imageView3);
-		zoomInButton = (ImageButton)findViewById(R.id.zoomInButton);
-        zoomOutButton = (ImageButton)findViewById(R.id.zoomOutButton);  
+		zoomInButton = (ImageButton) findViewById(R.id.zoomInButton);
+		zoomOutButton = (ImageButton) findViewById(R.id.zoomOutButton);
 
 		// Setup WiFi
 		wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -168,10 +167,11 @@ public class InPoint extends Activity {
 							// " "
 							// + map_num.get(key).doubleValue() + "\n");
 						}
-						
-						//obtain device mac address
-						
-						String address= wifi.getConnectionInfo().getMacAddress();
+
+						// obtain device mac address
+
+						String address = wifi.getConnectionInfo()
+								.getMacAddress();
 
 						// create a xml formatted string
 						String xml;
@@ -250,7 +250,7 @@ public class InPoint extends Activity {
 								 * replace "TestString" below to "json"
 								 */
 								String TestString = "10_0,BrainStorm";
-							    //readPositionFromServer(TestString);
+								// readPositionFromServer(TestString);
 								readPositionFromServer(json);
 
 								// send msg to main thread to update UI
@@ -286,22 +286,30 @@ public class InPoint extends Activity {
 						mapCopy = BitmapFactory.decodeResource(getResources(),
 								R.drawable.df_map_v2);
 						// add the mark coordinates here, (x,y)
-		// Version-1: Here using the calculated relative-coordinates, used to displace actual position	
-		/*				mapTemp = addMark(mapCopy, mapMark, serverReturn_x
-								/ mapActualX_Max, serverReturn_y
-								/ mapActualY_Max);
-		*/
-						
-		// Version-2: Here using the preset absolute coordinates, used to displace room-level-accuracy position	
-						mapTemp = addMark_roomLevel(mapCopy, mapMark, (int)serverReturn_x);
+						// Version-1: Here using the calculated
+						// relative-coordinates, used to displace actual
+						// position
+						/*
+						 * mapTemp = addMark(mapCopy, mapMark, serverReturn_x /
+						 * mapActualX_Max, serverReturn_y / mapActualY_Max);
+						 */
+
+						// Version-2: Here using the preset absolute
+						// coordinates, used to displace room-level-accuracy
+						// position
+						mapTemp = addMark_roomLevel(mapCopy, mapMark,
+								(int) serverReturn_x);
 						imageView.setImageBitmap(mapTemp);
-						//modify the picture display according to the User Finger Gesture
-						new ImageViewHelper(dm, imageView, mapTemp, zoomInButton, zoomOutButton); 
+						// modify the picture display according to the User
+						// Finger Gesture
+						new ImageViewHelper(dm, imageView, mapTemp,
+								zoomInButton, zoomOutButton);
 					}
 				}
 			};
 		}
-//		new ImageViewHelper(dm, imageView, mapTemp, zoomInButton, zoomOutButton);
+		// new ImageViewHelper(dm, imageView, mapTemp, zoomInButton,
+		// zoomOutButton);
 		Log.d(TAG, "onCreate()");
 	}
 
@@ -368,16 +376,11 @@ public class InPoint extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
-	
 
 	public void readPositionFromServer(String src) {
+		if (src == null)
+			return;
 		String temp[] = src.split(",|\\_|\\ ");
-		// textStatus.append("\nRead Result_x: ");
-		// textStatus.append(temp[0]);
-		// textStatus.append("  _y: ");
-		// textStatus.append(temp[1]);
 
 		try {
 			serverReturn_x = Float.parseFloat(temp[0]);
@@ -403,7 +406,8 @@ public class InPoint extends Activity {
 
 	}
 
-// Version-1: Here using the calculated relative-coordinates, used to displace actual position		
+	// Version-1: Here using the calculated relative-coordinates, used to
+	// displace actual position
 	public Bitmap addMark(Bitmap src, Bitmap mark, float relativePosX,
 			float relativePosY) {
 		// create a new figure, same size as original figure src
@@ -422,10 +426,9 @@ public class InPoint extends Activity {
 		// canvas.drawBitmap(mark, (src.getWidth() - mark.getWidth()) / 2,
 		// (src.getHeight() - mark.getHeight()) / 2, null);
 
-	
 		int posx = (int) (relativePosX * src.getWidth());
-	    int posy = (int) (relativePosY * src.getHeight());	
-		
+		int posy = (int) (relativePosY * src.getHeight());
+
 		// textStatus.append("\nmapped_x: ");
 		// textStatus.append(Integer.toString(posx));
 		// textStatus.append("  _y: ");
@@ -439,22 +442,23 @@ public class InPoint extends Activity {
 
 		return newb;
 	}
-	
-// Version-2: Here using the preset absolued coordinates, used to displace room-level-accuracy position	
+
+	// Version-2: Here using the preset absolued coordinates, used to displace
+	// room-level-accuracy position
 	public Bitmap addMark_roomLevel(Bitmap src, Bitmap mark, int roomNum) {
 		// create a new figure, same size as original figure src
-		float posx = 0; 
+		float posx = 0;
 		float posy = 0;
-		
-		float map_zoomed_x = src.getWidth()/2000;
-		float map_zoomed_y = src.getHeight()/781;
-		
+
+		float map_zoomed_x = (float) src.getWidth() / 2000;
+		float map_zoomed_y = (float) src.getHeight() / 781;
+
 		Bitmap newb = Bitmap.createBitmap(src.getWidth(), src.getHeight(),
 				Config.ARGB_8888);//
-		 textStatus.append("map_Width: ");
-		 textStatus.append(Integer.toString(src.getWidth()));
-		 textStatus.append("  _Height: ");
-		 textStatus.append(Integer.toString(src.getHeight()));
+		textStatus.append("map_Width: ");
+		textStatus.append(Integer.toString(src.getWidth()));
+		textStatus.append("  _Height: ");
+		textStatus.append(Integer.toString(src.getHeight()));
 
 		Canvas canvas = new Canvas(newb);
 		canvas.drawBitmap(src, 0, 0, null);// insert original figure at
@@ -464,75 +468,74 @@ public class InPoint extends Activity {
 		// canvas.drawBitmap(mark, (src.getWidth() - mark.getWidth()) / 2,
 		// (src.getHeight() - mark.getHeight()) / 2, null);
 
-		switch (roomNum){
-			case 1:
-				posx = 190;
-				posy = 343;
-				break;
-			case 2:
-				posx = 190;
-				posy = 513;
-				break;
-			case 3:
-				posx = 380;
-				posy = 377;
-				break;
-			case 4:
-				posx = 570;
-				posy = 390;
-				break;
-			case 5:
-				posx = 483;
-				posy = 595;
-				break;
-			case 6:
-				posx = 775;
-				posy = 583;
-				break;
-			case 7:
-				posx = 1083;
-				posy = 571;
-				break;
-			case 8:
-				posx = 1283;
-				posy = 565;
-				break;
-			case 9:
-				posx = 907;
-				posy = 429;
-				break;
-			case 10:
-				posx = 1280;
-				posy = 350;
-				break;				
-			case 11:
-				posx = 1370;
-				posy = 350;
-				break;
-			case 12:
-				posx = 1523;
-				posy = 523;
-				break;
-			case 13:
-				posx = 1523;
-				posy = 369;
-				break;
-			case 14:
-				posx = 1830;
-				posy = 535;
-				break;	
-			default:
-				posx = 15;
-				posy = 15;
+		switch (roomNum) {
+		case 1:
+			posx = 190;
+			posy = 343;
+			break;
+		case 2:
+			posx = 190;
+			posy = 513;
+			break;
+		case 3:
+			posx = 380;
+			posy = 377;
+			break;
+		case 4:
+			posx = 570;
+			posy = 390;
+			break;
+		case 5:
+			posx = 483;
+			posy = 595;
+			break;
+		case 6:
+			posx = 775;
+			posy = 583;
+			break;
+		case 7:
+			posx = 1083;
+			posy = 571;
+			break;
+		case 8:
+			posx = 1283;
+			posy = 565;
+			break;
+		case 9:
+			posx = 907;
+			posy = 429;
+			break;
+		case 10:
+			posx = 1280;
+			posy = 350;
+			break;
+		case 11:
+			posx = 1370;
+			posy = 350;
+			break;
+		case 12:
+			posx = 1523;
+			posy = 523;
+			break;
+		case 13:
+			posx = 1523;
+			posy = 369;
+			break;
+		case 14:
+			posx = 1830;
+			posy = 535;
+			break;
+		default:
+			posx = 15;
+			posy = 15;
 		}
-		
-		 int posx_rev = (int)((posx-15)*map_zoomed_x);
-		 int posy_rev = (int)((posy-15)*map_zoomed_y);
-		 textStatus.append("\nmapped_x: ");
-		 textStatus.append(Integer.toString(posx_rev));
-		 textStatus.append("  _y: ");
-		 textStatus.append(Integer.toString(posy_rev));
-		 textStatus.append("\n");
+		int posx_rev = (int) ((posx - 15) * map_zoomed_x);
+		int posy_rev = (int) ((posy - 15) * map_zoomed_y);
+		textStatus.append("\nmapped_x: ");
+		textStatus.append(Integer.toString(posx_rev));
+		textStatus.append("  _y: ");
+		textStatus.append(Integer.toString(posy_rev));
+		textStatus.append("\n");
 		canvas.drawBitmap(mark, posx_rev, posy_rev, null);
 		canvas.save(Canvas.ALL_SAVE_FLAG);
 		canvas.restore();
