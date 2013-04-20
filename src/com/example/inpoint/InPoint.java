@@ -179,7 +179,7 @@ public class InPoint extends Activity {
 						String session = "<session>\n <number>"
 								+ map_avg.size() + "</number>\n";
 						String deviceMac = " <own_mac>" + address
-								+ "</own_mac>\n"
+								+ "</own_mac>\n";
 						String content = " <content>\n";
 						for (String key : map_avg.keySet()) {
 							content += "  <";
@@ -445,6 +445,10 @@ public class InPoint extends Activity {
 		// create a new figure, same size as original figure src
 		float posx = 0; 
 		float posy = 0;
+		
+		float map_zoomed_x = src.getWidth()/2000;
+		float map_zoomed_y = src.getHeight()/781;
+		
 		Bitmap newb = Bitmap.createBitmap(src.getWidth(), src.getHeight(),
 				Config.ARGB_8888);//
 		 textStatus.append("map_Width: ");
@@ -522,8 +526,8 @@ public class InPoint extends Activity {
 				posy = 15;
 		}
 		
-		 int posx_rev = (int)((posx-15)*1.333);
-		 int posy_rev = (int)((posy-15)*1.333);
+		 int posx_rev = (int)((posx-15)*map_zoomed_x);
+		 int posy_rev = (int)((posy-15)*map_zoomed_y);
 		 textStatus.append("\nmapped_x: ");
 		 textStatus.append(Integer.toString(posx_rev));
 		 textStatus.append("  _y: ");
