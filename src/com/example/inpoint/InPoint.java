@@ -15,6 +15,7 @@ import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -52,6 +54,7 @@ public class InPoint extends Activity {
 	public static WifiManager wifi;
 
 	public static final int MENU_EXITAPPLICATION = Menu.FIRST;
+	public static final int MENU_VISITHOMEPAGE = 2;
 
 	public static Handler mainHandler;
 	public static TextView textStatus;
@@ -62,6 +65,7 @@ public class InPoint extends Activity {
 	private DisplayMetrics dm;
 
 	public static boolean should_scan;
+	public static boolean firsttimescan;
 
 	private Bitmap mapMark;
 	private Bitmap mapCopy;
@@ -95,6 +99,7 @@ public class InPoint extends Activity {
 
 		// Setup imageView
 		should_scan = true;
+		firsttimescan = true;
 
 		// ImageView map = (ImageView)this.findViewById(R.id.imageView3);
 
@@ -302,14 +307,22 @@ public class InPoint extends Activity {
 						imageView.setImageBitmap(mapTemp);
 						// modify the picture display according to the User
 						// Finger Gesture
-						new ImageViewHelper(dm, imageView, mapTemp,
-								zoomInButton, zoomOutButton);
+						if (firsttimescan) {
+							new ImageViewHelper(dm, imageView, mapTemp,
+									zoomInButton, zoomOutButton);
+							firsttimescan = false;
+						}
 					}
 				}
 			};
 		}
 		// new ImageViewHelper(dm, imageView, mapTemp, zoomInButton,
 		// zoomOutButton);
+
+		// initial update UI
+		Message msg_update_UI = mainHandler.obtainMessage();
+		msg_update_UI.obj = "update UI!\n";
+		mainHandler.sendMessage(msg_update_UI);
 		Log.d(TAG, "onCreate()");
 	}
 
@@ -345,6 +358,7 @@ public class InPoint extends Activity {
 
 	@Override
 	public void onDestroy() {
+		// exit background scanning thread
 		should_scan = false;
 		unregisterForContextMenu(textStatus);
 		unregisterForContextMenu(imageView);
@@ -362,7 +376,9 @@ public class InPoint extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_EXITAPPLICATION, 0, "Exit InPoint App");
+
+		menu.add(0, MENU_VISITHOMEPAGE, 0, "InPoint HomePage");
+		menu.add(0, MENU_EXITAPPLICATION, 1, "Exit InPoint App");
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -373,6 +389,10 @@ public class InPoint extends Activity {
 			SysUtil mSysUtil = new SysUtil(InPoint.this);
 			mSysUtil.exit();
 
+		} else if (item.getItemId() == MENU_VISITHOMEPAGE) {
+			// vist home page
+			Uri uri = Uri.parse("http://inpoint.pdp.fi");
+			startActivity(new Intent(Intent.ACTION_VIEW, uri));
 		}
 		return super.onOptionsItemSelected(item);
 	}
