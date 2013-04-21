@@ -1,67 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_gravity="center"
-    android:orientation="vertical"    
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-   		
-   	<TextView
-      	android:id="@+id/textView1"
-       	android:layout_width="match_parent"
-       	android:layout_height="wrap_content"
-       	android:text="@string/Inpoint_notification"
-       	android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-   	<FrameLayout 
-	    android:layout_width="fill_parent"
-    	android:layout_height="400dp">
-   		
-    	<ImageView
-            	android:id="@+id/imageView3"
-            	android:layout_width="fill_parent"
-            	android:layout_height="fill_parent"
-              	android:scaleType="matrix"
-              	android:adjustViewBounds="true"
-              	android:contentDescription="@string/desc" />
+    android:layout_height="fill_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical" >
 
-        <LinearLayout 
-            android:layout_gravity="bottom|right|center" 
-            android:orientation="horizontal" 
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content" 
-            android:height="20.0dip">
-            <ImageButton 
-                android:id="@+id/zoomInButton" 
-                android:background="@null" 
-                android:paddingRight="5.0dip" 
-                android:layout_width="wrap_content" 
-                android:layout_height="wrap_content" 
-                android:src="@drawable/zoom_in" 
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="400dp" >
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/desc"
+            android:scaleType="matrix" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right|center"
+            android:height="20.0dip"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/zoomInButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:paddingRight="5.0dip"
+                android:src="@drawable/zoom_in"
                 android:text="In" />
-            <ImageButton 
-                android:id="@+id/zoomOutButton" 
-                android:background="@null" 
-                android:paddingLeft="5.0dip" 
-                android:layout_width="wrap_content" 
-                android:layout_height="wrap_content" 
-                android:src="@drawable/zoom_out" 
-                android:text="Out" />
-            
-        </LinearLayout>
-    	
-	</FrameLayout>
-	
-	<ScrollView
-        		android:id="@+id/ScrollView01"
-        		android:layout_width="wrap_content"
-        		android:layout_height="wrap_content" >
 
-        		<TextView
-            		android:id="@+id/textStatus"
-            		android:layout_width="350dp"
-            		android:layout_height="wrap_content"
-            		android:text="inPoint" />
+            <ImageButton
+                android:id="@+id/zoomOutButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:paddingLeft="5.0dip"
+                android:src="@drawable/zoom_out"
+                android:text="Out" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:text="inPoint" />
     </ScrollView>
-    	
-	
+
 </LinearLayout>
