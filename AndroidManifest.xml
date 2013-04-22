@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.inpoint.InPoint"
-            android:label="@string/title_activity_wifi_scanner" android:screenOrientation="landscape">
+            android:label="@string/title_activity_wifi_scanner" android:screenOrientation="landscape" android:description="@string/description">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,8 +26,6 @@
             </intent-filter>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
 
 

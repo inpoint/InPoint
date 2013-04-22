@@ -11,8 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.PointF;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,21 +19,12 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.StrictMode;
 import android.util.DisplayMetrics;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -49,6 +38,7 @@ import org.apache.http.protocol.HTTP;
 
 public class InPoint extends Activity {
 	private static final String TAG = "WifiScanner";
+	private static final int SCAN_ROUND = 5;
 	// public static final String userID =
 	// android.provider.Settings.Secure.ANDROID_ID;
 	public static WifiManager wifi;
@@ -102,7 +92,28 @@ public class InPoint extends Activity {
 		firsttimescan = true;
 
 		// ImageView map = (ImageView)this.findViewById(R.id.imageView3);
+		mapMark = BitmapFactory.decodeResource(getResources(),
+				R.drawable.map_mark);
+		mapCopy = BitmapFactory.decodeResource(getResources(),
+				R.drawable.df_map_v2);
+		// add the mark coordinates here, (x,y)
+		// Version-1: Here using the calculated
+		// relative-coordinates, used to displace actual
+		// position
+		/*
+		 * mapTemp = addMark(mapCopy, mapMark, serverReturn_x / mapActualX_Max,
+		 * serverReturn_y / mapActualY_Max);
+		 */
 
+		// Version-2: Here using the preset absolute
+		// coordinates, used to displace room-level-accuracy
+		// position
+
+		mapTemp = addMark_roomLevel(mapCopy, mapMark, (int) serverReturn_x);
+		imageView.setImageBitmap(mapTemp);
+		// modify the picture display according to the User
+		// Finger Gesture
+		new ImageViewHelper(dm, imageView, mapTemp, zoomInButton, zoomOutButton);
 		if (!wifi.isWifiEnabled()) {
 			Toast.makeText(
 					this,
@@ -121,8 +132,8 @@ public class InPoint extends Activity {
 						}
 
 						ArrayList<List<ScanResult>> ScanList = new ArrayList<List<ScanResult>>(
-								5);
-						for (int scancount = 0; scancount < 5; scancount++) {
+								SCAN_ROUND);
+						for (int scancount = 0; scancount < SCAN_ROUND; scancount++) {
 							wifi.startScan();
 							try {
 								Thread.sleep(700);
@@ -138,7 +149,7 @@ public class InPoint extends Activity {
 						// TODO Compare 5 scan results and Calculate an
 						// average value
 						// List<ScanResult> average;
-						for (int i = 0; i < 5; i++) {
+						for (int i = 0; i < SCAN_ROUND; i++) {
 							List<ScanResult> res = ScanList.get(i);
 							for (int j = 0; j < res.size(); j++) {
 								if (!map_sig.containsKey(res.get(j).BSSID)) {
@@ -162,7 +173,8 @@ public class InPoint extends Activity {
 						}
 						HashMap<String, Double> map_avg = new HashMap<String, Double>();
 						for (String key : map_sig.keySet()) {
-							if (Double.valueOf(map_num.get(key)) >= 3)
+							// if more than half scan times can the AP be seen
+							if (Double.valueOf(map_num.get(key)) >= SCAN_ROUND * 0.5)
 								map_avg.put(key, Double.valueOf(map_sig
 										.get(key).doubleValue()
 										/ map_num.get(key).doubleValue()));
@@ -286,10 +298,20 @@ public class InPoint extends Activity {
 						textStatus.append(msg.obj.toString());
 					else {
 						// add mark to the map
-						mapMark = BitmapFactory.decodeResource(getResources(),
-								R.drawable.map_mark);
-						mapCopy = BitmapFactory.decodeResource(getResources(),
-								R.drawable.df_map_v2);
+						// if (mapMark != null) {
+						// mapMark.recycle();
+						// mapMark = null;
+						// }
+						// if (mapCopy != null) {
+						// mapCopy.recycle();
+						// mapCopy = null;
+						// }
+						// mapMark =
+						// BitmapFactory.decodeResource(getResources(),
+						// R.drawable.map_mark);
+						// mapCopy =
+						// BitmapFactory.decodeResource(getResources(),
+						// R.drawable.df_map_v2);
 						// add the mark coordinates here, (x,y)
 						// Version-1: Here using the calculated
 						// relative-coordinates, used to displace actual
@@ -302,16 +324,10 @@ public class InPoint extends Activity {
 						// Version-2: Here using the preset absolute
 						// coordinates, used to displace room-level-accuracy
 						// position
+
 						mapTemp = addMark_roomLevel(mapCopy, mapMark,
 								(int) serverReturn_x);
 						imageView.setImageBitmap(mapTemp);
-						// modify the picture display according to the User
-						// Finger Gesture
-						if (firsttimescan) {
-							new ImageViewHelper(dm, imageView, mapTemp,
-									zoomInButton, zoomOutButton);
-							firsttimescan = false;
-						}
 					}
 				}
 			};
@@ -559,9 +575,6 @@ public class InPoint extends Activity {
 		canvas.drawBitmap(mark, posx_rev, posy_rev, null);
 		canvas.save(Canvas.ALL_SAVE_FLAG);
 		canvas.restore();
-
-		mark.recycle();
-		mark = null;
 
 		return newb;
 	}
