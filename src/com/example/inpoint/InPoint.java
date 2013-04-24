@@ -94,8 +94,10 @@ public class InPoint extends Activity {
 		// ImageView map = (ImageView)this.findViewById(R.id.imageView3);
 		mapMark = BitmapFactory.decodeResource(getResources(),
 				R.drawable.map_mark);
+//		BitmapFactory.Options opts = new BitmapFactory.Options();
+//		opts.inSampleSize=1;
 		mapCopy = BitmapFactory.decodeResource(getResources(),
-				R.drawable.df_map_v2);
+				R.drawable.df_map_gala);
 		// add the mark coordinates here, (x,y)
 		// Version-1: Here using the calculated
 		// relative-coordinates, used to displace actual
@@ -423,11 +425,11 @@ public class InPoint extends Activity {
 		} catch (NumberFormatException e) {
 			e.toString();
 		}
-		try {
-			serverReturn_y = Float.parseFloat(temp[1]);
-		} catch (NumberFormatException e) {
-			e.toString();
-		}
+//		try {
+//			serverReturn_y = Float.parseFloat(temp[1]);
+//		} catch (NumberFormatException e) {
+//			e.toString();
+//		}
 		// textStatus.append("\nTrans Result_x: ");
 		// textStatus.append(Float.toString(serverReturn_x));
 		// textStatus.append("  _y: ");
@@ -472,9 +474,9 @@ public class InPoint extends Activity {
 		canvas.drawBitmap(mark, posx, posy, null);
 		canvas.save(Canvas.ALL_SAVE_FLAG);
 		canvas.restore();
-
-		mark.recycle();
-		mark = null;
+//
+//		mark.recycle();
+//		mark = null;
 
 		return newb;
 	}
@@ -486,8 +488,8 @@ public class InPoint extends Activity {
 		float posx = 0;
 		float posy = 0;
 
-		float map_zoomed_x = (float) src.getWidth() / 2000;
-		float map_zoomed_y = (float) src.getHeight() / 781;
+		float map_zoomed_x = (float) src.getWidth() / 1920;
+		float map_zoomed_y = (float) src.getHeight() / 1200;
 
 		Bitmap newb = Bitmap.createBitmap(src.getWidth(), src.getHeight(),
 				Config.ARGB_8888);//
@@ -506,67 +508,91 @@ public class InPoint extends Activity {
 
 		switch (roomNum) {
 		case 1:
-			posx = 190;
-			posy = 343;
+			posx = 160;
+			posy = 520;
 			break;
 		case 2:
-			posx = 190;
-			posy = 513;
+			posx = 160;
+			posy = 760;
 			break;
 		case 3:
-			posx = 380;
-			posy = 377;
+			posx = 345;
+			posy = 570;
 			break;
 		case 4:
-			posx = 570;
-			posy = 390;
+			posx = 530;
+			posy = 570;
 			break;
 		case 5:
-			posx = 483;
-			posy = 595;
+			posx = 460;
+			posy = 760;
 			break;
 		case 6:
-			posx = 775;
-			posy = 583;
+			posx = 730;
+			posy = 750;
 			break;
 		case 7:
-			posx = 1083;
-			posy = 571;
+			posx = 970;
+			posy = 740;
 			break;
 		case 8:
-			posx = 1283;
-			posy = 565;
+			posx = 1220;
+			posy = 740;
 			break;
 		case 9:
-			posx = 907;
-			posy = 429;
+			posx = 855;
+			posy = 600;
 			break;
 		case 10:
-			posx = 1280;
-			posy = 350;
+			posx = 1228;
+			posy = 524;
 			break;
 		case 11:
-			posx = 1370;
-			posy = 350;
+			posx = 1320;
+			posy = 524;
 			break;
-		case 12:
-			posx = 1523;
-			posy = 523;
+		case 121:
+			posx = 1410;
+			posy = 702;
 			break;
-		case 13:
-			posx = 1523;
-			posy = 369;
+		case 122:
+			posx = 1530;
+			posy = 702;
 			break;
+		case 131:
+			posx = 1410;
+			posy = 513;
+			break;
+		case 132:
+			posx = 1530;
+			posy = 513;
+			break;	
 		case 14:
-			posx = 1830;
-			posy = 535;
+			posx = 1755;
+			posy = 700;
+			break;
+		case 15:
+			posx = 1680;
+			posy = 602;
+			break;
+		case 16:
+			posx = 1462;
+			posy = 607;
+			break;
+		case 17:
+			posx = 1045;
+			posy = 602;
+			break;
+		case 18:
+			posx = 1253;
+			posy = 603;
 			break;
 		default:
-			posx = 15;
-			posy = 15;
+			posx = 40;
+			posy = 40;
 		}
-		int posx_rev = (int) ((posx - 15) * map_zoomed_x);
-		int posy_rev = (int) ((posy - 15) * map_zoomed_y);
+		int posx_rev = (int) ((posx - 80) * map_zoomed_x);
+		int posy_rev = (int) ((posy - 80) * map_zoomed_y);
 		textStatus.append("\nmapped_x: ");
 		textStatus.append(Integer.toString(posx_rev));
 		textStatus.append("  _y: ");
