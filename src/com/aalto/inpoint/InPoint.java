@@ -1,4 +1,4 @@
-package com.example.inpoint;
+package com.aalto.inpoint;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +36,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HTTP;
 
+import com.aalto.inpoint.R;
+
 public class InPoint extends Activity {
 	private static final String TAG = "WifiScanner";
 	private static final int SCAN_ROUND = 5;
@@ -60,6 +62,9 @@ public class InPoint extends Activity {
 	private Bitmap mapMark;
 	private Bitmap mapCopy;
 	private Bitmap mapTemp;
+
+	private Bitmap oldb;
+	// private Bitmap newb;
 
 	public static final float mapActualX_Max = 100; // represent max coordinate
 													// x, length
@@ -94,8 +99,8 @@ public class InPoint extends Activity {
 		// ImageView map = (ImageView)this.findViewById(R.id.imageView3);
 		mapMark = BitmapFactory.decodeResource(getResources(),
 				R.drawable.map_mark);
-//		BitmapFactory.Options opts = new BitmapFactory.Options();
-//		opts.inSampleSize=1;
+		// BitmapFactory.Options opts = new BitmapFactory.Options();
+		// opts.inSampleSize=1;
 		mapCopy = BitmapFactory.decodeResource(getResources(),
 				R.drawable.df_map_gala);
 		// add the mark coordinates here, (x,y)
@@ -330,6 +335,9 @@ public class InPoint extends Activity {
 						mapTemp = addMark_roomLevel(mapCopy, mapMark,
 								(int) serverReturn_x);
 						imageView.setImageBitmap(mapTemp);
+
+						oldb = mapTemp;
+
 					}
 				}
 			};
@@ -425,11 +433,11 @@ public class InPoint extends Activity {
 		} catch (NumberFormatException e) {
 			e.toString();
 		}
-//		try {
-//			serverReturn_y = Float.parseFloat(temp[1]);
-//		} catch (NumberFormatException e) {
-//			e.toString();
-//		}
+		// try {
+		// serverReturn_y = Float.parseFloat(temp[1]);
+		// } catch (NumberFormatException e) {
+		// e.toString();
+		// }
 		// textStatus.append("\nTrans Result_x: ");
 		// textStatus.append(Float.toString(serverReturn_x));
 		// textStatus.append("  _y: ");
@@ -474,9 +482,9 @@ public class InPoint extends Activity {
 		canvas.drawBitmap(mark, posx, posy, null);
 		canvas.save(Canvas.ALL_SAVE_FLAG);
 		canvas.restore();
-//
-//		mark.recycle();
-//		mark = null;
+		//
+		// mark.recycle();
+		// mark = null;
 
 		return newb;
 	}
@@ -490,7 +498,10 @@ public class InPoint extends Activity {
 
 		float map_zoomed_x = (float) src.getWidth() / 1920;
 		float map_zoomed_y = (float) src.getHeight() / 1200;
-
+		if (oldb != null) {
+			oldb.recycle();
+			oldb = null;
+		}
 		Bitmap newb = Bitmap.createBitmap(src.getWidth(), src.getHeight(),
 				Config.ARGB_8888);//
 		textStatus.append("map_Width: ");
@@ -566,7 +577,7 @@ public class InPoint extends Activity {
 		case 132:
 			posx = 1530;
 			posy = 513;
-			break;	
+			break;
 		case 14:
 			posx = 1755;
 			posy = 700;
