@@ -1,4 +1,5 @@
 InPoint
 =======
 
-InPoint indoor positioning Client for Inpoint project, Aalto University.
+InPoint indoor positioning Client for InPoint project, Aalto University.
+http://inpoint.pdp.fi
