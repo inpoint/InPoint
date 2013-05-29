@@ -1,4 +1,4 @@
-package com.aalto.inpoint;
+package com.aalto.inpointgala;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +36,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.protocol.HTTP;
 
-import com.aalto.inpoint.R;
+import com.aalto.inpointgala.R;
 
 public class InPoint extends Activity {
 	private static final String TAG = "WifiScanner";
@@ -96,13 +96,17 @@ public class InPoint extends Activity {
 		should_scan = true;
 		firsttimescan = true;
 
+		ConnectivityManager mag = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo info = mag.getActiveNetworkInfo();
+		
+		BitmapFactory.Options opts = new BitmapFactory.Options();
+		opts.inSampleSize = 2;
 		// ImageView map = (ImageView)this.findViewById(R.id.imageView3);
 		mapMark = BitmapFactory.decodeResource(getResources(),
-				R.drawable.map_mark);
-		// BitmapFactory.Options opts = new BitmapFactory.Options();
-		// opts.inSampleSize=1;
+				R.drawable.map_mark, opts);
+
 		mapCopy = BitmapFactory.decodeResource(getResources(),
-				R.drawable.df_map_gala);
+				R.drawable.df_map_gala_small);
 		// add the mark coordinates here, (x,y)
 		// Version-1: Here using the calculated
 		// relative-coordinates, used to displace actual
@@ -126,7 +130,13 @@ public class InPoint extends Activity {
 					this,
 					"WiFi is not open on this device, Please enable it and restart the app!",
 					Toast.LENGTH_LONG).show();
-		} else {
+		}else if (info == null || !info.isConnected()) {
+			Toast.makeText(
+					this,
+					"No internet connection on this device, please connect via 3G or open WiFi AP and restart the app",
+					Toast.LENGTH_LONG).show();
+		} 
+		else {
 			Thread scan_thread = new Thread() {
 				@Override
 				public void run() {
@@ -273,7 +283,7 @@ public class InPoint extends Activity {
 								 * for function Test, In actual use, please
 								 * replace "TestString" below to "json"
 								 */
-								String TestString = "10_0,BrainStorm";
+								String TestString = "18,BrainStorm";
 								// readPositionFromServer(TestString);
 								readPositionFromServer(json);
 
@@ -341,7 +351,7 @@ public class InPoint extends Activity {
 					}
 				}
 			};
-		}
+		
 		// new ImageViewHelper(dm, imageView, mapTemp, zoomInButton,
 		// zoomOutButton);
 
@@ -350,6 +360,7 @@ public class InPoint extends Activity {
 		msg_update_UI.obj = "update UI!\n";
 		mainHandler.sendMessage(msg_update_UI);
 		Log.d(TAG, "onCreate()");
+		}
 	}
 
 	@Override
@@ -496,8 +507,14 @@ public class InPoint extends Activity {
 		float posx = 0;
 		float posy = 0;
 
-		float map_zoomed_x = (float) src.getWidth() / 1920;
-		float map_zoomed_y = (float) src.getHeight() / 1200;
+		// big map
+		// float map_zoomed_x = (float) src.getWidth() / 1920;
+		// float map_zoomed_y = (float) src.getHeight() / 1200;
+
+		// small map
+		float map_zoomed_x = (float) src.getWidth() / 1280;
+		float map_zoomed_y = (float) src.getHeight() / 800;
+
 		if (oldb != null) {
 			oldb.recycle();
 			oldb = null;
@@ -517,93 +534,109 @@ public class InPoint extends Activity {
 		// canvas.drawBitmap(mark, (src.getWidth() - mark.getWidth()) / 2,
 		// (src.getHeight() - mark.getHeight()) / 2, null);
 
+		/*
+		 * //for big map switch (roomNum) { case 1: posx = 160; posy = 520;
+		 * break; case 2: posx = 160; posy = 760; break; case 3: posx = 345;
+		 * posy = 570; break; case 4: posx = 530; posy = 570; break; case 5:
+		 * posx = 460; posy = 760; break; case 6: posx = 730; posy = 750; break;
+		 * case 7: posx = 970; posy = 740; break; case 8: posx = 1220; posy =
+		 * 740; break; case 9: posx = 855; posy = 600; break; case 10: posx =
+		 * 1228; posy = 524; break; case 11: posx = 1320; posy = 524; break;
+		 * case 121: posx = 1410; posy = 702; break; case 122: posx = 1530; posy
+		 * = 702; break; case 131: posx = 1410; posy = 513; break; case 132:
+		 * posx = 1530; posy = 513; break; case 14: posx = 1755; posy = 700;
+		 * break; case 15: posx = 1680; posy = 602; break; case 16: posx = 1462;
+		 * posy = 607; break; case 17: posx = 1045; posy = 602; break; case 18:
+		 * posx = 1253; posy = 603; break; default: posx = 40; posy = 40; }
+		 */
+		// small map
 		switch (roomNum) {
 		case 1:
-			posx = 160;
-			posy = 520;
+			posx = 120;
+			posy = 330;
 			break;
 		case 2:
-			posx = 160;
-			posy = 760;
+			posx = 120;
+			posy = 447;
 			break;
 		case 3:
-			posx = 345;
-			posy = 570;
+			posx = 240;
+			posy = 370;
 			break;
 		case 4:
-			posx = 530;
-			posy = 570;
+			posx = 360;
+			posy = 360;
 			break;
 		case 5:
-			posx = 460;
-			posy = 760;
+			posx = 324;
+			posy = 495;
 			break;
 		case 6:
-			posx = 730;
-			posy = 750;
+			posx = 520;
+			posy = 487;
 			break;
 		case 7:
-			posx = 970;
-			posy = 740;
+			posx = 644;
+			posy = 479;
 			break;
 		case 8:
-			posx = 1220;
-			posy = 740;
+			posx = 823;
+			posy = 479;
 			break;
 		case 9:
-			posx = 855;
-			posy = 600;
+			posx = 571;
+			posy = 390;
 			break;
 		case 10:
-			posx = 1228;
-			posy = 524;
+			posx = 813;
+			posy = 341;
 			break;
 		case 11:
-			posx = 1320;
-			posy = 524;
+			posx = 869;
+			posy = 341;
 			break;
 		case 121:
-			posx = 1410;
-			posy = 702;
+			posx = 940;
+			posy = 450;
 			break;
 		case 122:
-			posx = 1530;
-			posy = 702;
+			posx = 1000;
+			posy = 450;
 			break;
 		case 131:
-			posx = 1410;
-			posy = 513;
+			posx = 927;
+			posy = 342;
 			break;
 		case 132:
-			posx = 1530;
-			posy = 513;
+			posx = 1000;
+			posy = 342;
 			break;
 		case 14:
-			posx = 1755;
-			posy = 700;
+			posx = 1156;
+			posy = 455;
 			break;
 		case 15:
-			posx = 1680;
-			posy = 602;
+			posx = 1106;
+			posy = 390;
 			break;
 		case 16:
-			posx = 1462;
-			posy = 607;
+			posx = 968;
+			posy = 395;
 			break;
 		case 17:
-			posx = 1045;
-			posy = 602;
+			posx = 686;
+			posy = 392;
 			break;
 		case 18:
-			posx = 1253;
-			posy = 603;
+			posx = 825;
+			posy = 392;
 			break;
 		default:
 			posx = 40;
 			posy = 40;
 		}
-		int posx_rev = (int) ((posx - 80) * map_zoomed_x);
-		int posy_rev = (int) ((posy - 80) * map_zoomed_y);
+		int posx_rev = (int) ((posx - 40) * map_zoomed_x);
+		int posy_rev = (int) ((posy - 40) * map_zoomed_y);
 		textStatus.append("\nmapped_x: ");
 		textStatus.append(Integer.toString(posx_rev));
 		textStatus.append("  _y: ");

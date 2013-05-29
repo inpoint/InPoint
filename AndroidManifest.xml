@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aalto.inpoint"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="com.aalto.inpointgala"
+    android:versionCode="3"
+    android:versionName="3.1" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -17,8 +17,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.aalto.inpoint.InPoint"
-            android:label="@string/title_activity_wifi_scanner" android:screenOrientation="unspecified" android:description="@string/description">
+            android:name="com.aalto.inpointgala.InPoint"
+            android:label="@string/title_activity_wifi_scanner" android:screenOrientation="landscape" android:description="@string/description">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

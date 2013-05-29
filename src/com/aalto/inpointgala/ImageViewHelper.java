@@ -1,4 +1,4 @@
-package com.aalto.inpoint;
+package com.aalto.inpointgala;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;

@@ -1,4 +1,4 @@
-package com.aalto.inpoint;
+package com.aalto.inpointgala;
 import android.content.Context;  
 import android.content.Intent;
 

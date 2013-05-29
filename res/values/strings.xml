@@ -1,9 +1,9 @@
 <resources>
 
-    <string name="app_name">InPoint</string>
+    <string name="app_name">InPointGala</string>
     <string name="Inpoint_notification">Inpoint Project Indoor positioning</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_wifi_scanner">InPoint</string>
+    <string name="title_activity_wifi_scanner">InPointGala</string>
     <string name="desc">image</string>
     <string name="description">Indoor Positioning Prototype for PDP course, Aato University</string>
 

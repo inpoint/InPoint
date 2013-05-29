@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.aalto.inpoint;
+package com.aalto.inpointgala;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

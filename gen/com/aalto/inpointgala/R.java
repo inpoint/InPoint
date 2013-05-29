@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.aalto.inpoint;
+package com.aalto.inpointgala;
 
 public final class R {
     public static final class attr {
